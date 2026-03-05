@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SÜRPRİZ!</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎁</text></svg>"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+      :root {
+        --card-bg: rgba(255, 255, 255, 0.1);
+        --glass-border: rgba(255, 255, 255, 0.25);
+        --accent: #ffca3a;
+        --accent-2: #ff6b6b;
+        --text-main: rgba(255, 255, 255, 0.98);
+        --muted: rgba(255, 255, 255, 0.85);
+        --glass-shadow: 0 10px 40px rgba(16, 24, 40, 0.6);
+      }
+      .typewriter::after {
+        content: "";
+        display: inline-block;
+        width: 10px;
+        height: 1.2em;
+        margin-left: 6px;
+        background: linear-gradient(90deg, var(--accent), transparent);
+        animation: caret 1s steps(1) infinite;
+      }
+      @keyframes caret {
+        50% {
+          opacity: 0;
+        }
+      }
+      .ribbon {
+        position: absolute;
+        left: -40px;
+        top: -30px;
+        transform: rotate(-15deg);
+        opacity: 0.95;
+      }
+      /* audio-toggle removed */
+    </style>
+    <style>
+      body {
+        background: linear-gradient(
+          -45deg,
+          #a75fee,
+          #f984fb,
+          #50c878,
+          #e100ff,
+          #ff6b6b,
+          #4ecdc4,
+          #ffeaa7,
+          #dda0dd
+        );
+        background-size: 400% 400%;
+        animation: gradient-animation 15s ease infinite;
+        font-family: "Inter", sans-serif;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        padding: 20px;
+        overflow: hidden;
+      }
+
+      @keyframes gradient-animation {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      .content-card {
+        backdrop-filter: blur(14px) saturate(120%);
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.06),
+          rgba(255, 255, 255, 0.02)
+        );
+        border: 1px solid var(--glass-border);
+        box-shadow: var(--glass-shadow);
+        transition: transform 420ms cubic-bezier(0.2, 0.9, 0.3, 1),
+          max-height 600ms ease;
+        cursor: pointer;
+        max-height: 420px;
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .content-card:focus {
+        outline: none;
+        box-shadow: 0 12px 50px rgba(16, 24, 40, 0.7),
+          0 0 0 6px rgba(255, 202, 58, 0.06);
+      }
+
+      .content-card.opened {
+        max-height: 8000px;
+        cursor: default;
+        transform: translateY(-6px) scale(1.03);
+      }
+
+      .initial-message {
+        transition: opacity 0.45s ease-out, transform 0.45s ease-out;
+      }
+
+      .full-message {
+        opacity: 0;
+        max-height: 0;
+        transition: opacity 0.55s ease-in-out 0.35s, max-height 0.7s ease-in-out;
+        padding-top: 0;
+        transform: translateY(18px);
+      }
+
+      .content-card.opened .full-message {
+        opacity: 1;
+        max-height: 600px;
+        padding-top: 1.5rem;
+        transform: translateY(0);
+      }
+
+      /* Spotlight behind card */
+      .spotlight {
+        position: absolute;
+        left: 50%;
+        top: 48%;
+        transform: translateX(-50%);
+        width: 520px;
+        height: 520px;
+        background: radial-gradient(
+          ellipse at center,
+          rgba(255, 255, 255, 0.12),
+          rgba(255, 255, 255, 0.03) 40%,
+          transparent 70%
+        );
+        filter: blur(32px);
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      .text1 {
+        color: #ffd166;
+        font-style: italic;
+        font-size: 1.02rem;
+        font-weight: 700;
+      }
+      .text2 {
+        color: rgba(255, 255, 255, 0.95);
+        font-style: italic;
+      }
+
+      .metin1 {
+        font-size: 1.05rem;
+        font-style: italic;
+        font-feature-settings: "aalt";
+      }
+
+      .animate-pulse {
+        animation: pulse 2.2s infinite;
+      }
+      .gift-icon {
+        width: 96px;
+        height: 96px;
+        filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.45));
+      }
+
+      /* Yıldız animasyonu */
+      .stars {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 0;
+      }
+      .star {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 50%;
+        animation: twinkle 2.2s infinite ease-in-out;
+        box-shadow: 0 0 8px rgba(255, 255, 255, 0.18);
+      }
+      /* Balloons */
+      .balloon {
+        position: absolute;
+        bottom: -120px;
+        border-radius: 50%;
+        opacity: 0.98;
+        transform-origin: center;
+        will-change: transform, left, bottom;
+        box-shadow: 0 10px 24px rgba(16, 24, 40, 0.45);
+        cursor: pointer;
+        touch-action: none;
+        border: 2px solid rgba(255, 255, 255, 0.06);
+        overflow: visible;
+      }
+      .balloon::after {
+        content: "";
+        position: absolute;
+        left: 18%;
+        top: 18%;
+        width: 28%;
+        height: 28%;
+        border-radius: 50%;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.9),
+          rgba(255, 255, 255, 0.12)
+        );
+        mix-blend-mode: screen;
+        pointer-events: none;
+      }
+      .balloon.popped {
+        transform: scale(1.6) rotate(-10deg);
+        opacity: 0;
+        transition: transform 220ms ease-out, opacity 220ms ease-out;
+      }
+      .balloon .balloon-string {
+        position: absolute;
+        left: 50%;
+        bottom: -14px;
+        transform: translateX(-50%);
+        width: 2px;
+        border-radius: 2px;
+      }
+      @keyframes floatUp {
+        0% {
+          transform: translateY(0) scale(0.9);
+        }
+        50% {
+          transform: translateY(-30vh) scale(1.05);
+        }
+        100% {
+          transform: translateY(-60vh) scale(0.95);
+        }
+      }
+
+      /* Burst particles from balloon pop */
+      .burst {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        pointer-events: none;
+        transform: translate(0, 0) rotate(var(--rot, 0deg)) scale(1);
+        opacity: 1;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+        animation: burst 680ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+      }
+      .burst.tri {
+        width: 0;
+        height: 0;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-bottom: 12px solid;
+        border-radius: 0;
+      }
+      @keyframes burst {
+        0% {
+          opacity: 1;
+          transform: translate(0, 0) rotate(var(--rot, 0deg)) scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(var(--tx), var(--ty)) rotate(var(--rot, 0deg))
+            scale(0.3);
+        }
+      }
+
+      .pop-ring {
+        position: absolute;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: 3px solid rgba(255, 255, 255, 0.6);
+        transform: scale(0.2);
+        opacity: 0.9;
+        pointer-events: none;
+        animation: popRing 420ms ease-out forwards;
+        mix-blend-mode: screen;
+      }
+      @keyframes popRing {
+        0% {
+          transform: scale(0.2);
+          opacity: 0.9;
+        }
+        100% {
+          transform: scale(1.6);
+          opacity: 0;
+        }
+      }
+
+      /* Floating hearts on like */
+      .heart {
+        position: absolute;
+        width: 34px;
+        height: 34px;
+        transform: translate(-50%, -50%) scale(0.9);
+        pointer-events: none;
+        animation: floatHeart 1400ms cubic-bezier(0.2, 0.9, 0.2, 1) forwards;
+        filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.25));
+      }
+      .heart svg {
+        width: 100%;
+        height: 100%;
+      }
+      @keyframes floatHeart {
+        0% {
+          transform: translate(-50%, -50%) scale(0.9) translateY(0);
+          opacity: 1;
+        }
+        100% {
+          transform: translate(-50%, -140%) scale(1.1) translateY(-60px);
+          opacity: 0;
+        }
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.02);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      @keyframes twinkle {
+        0%,
+        100% {
+          opacity: 0;
+          transform: scale(0);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      /* Creative extras */
+      .blobs {
+        position: absolute;
+        inset: -10% -10% auto -10%;
+        height: 140%;
+        pointer-events: none;
+        z-index: -2;
+      }
+      .blob {
+        position: absolute;
+        filter: blur(26px) saturate(130%);
+        opacity: 0.12;
+        mix-blend-mode: screen;
+      }
+
+      /* Card parallax */
+      .content-card {
+        transition: transform 360ms cubic-bezier(0.2, 0.9, 0.3, 1),
+          box-shadow 360ms;
+        will-change: transform;
+      }
+
+      /* Sparkle trail */
+      .spark {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        pointer-events: none;
+        transform-origin: center;
+        mix-blend-mode: screen;
+        animation: sparkFade 700ms ease-out forwards;
+      }
+      @keyframes sparkFade {
+        0% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-24px) scale(0.2);
+        }
+      }
+
+      /* Ribbons */
+      .ribbon-fall {
+        position: absolute;
+        width: 12px;
+        height: 56px;
+        border-radius: 6px;
+        opacity: 0.95;
+        pointer-events: none;
+        transform-origin: center;
+        animation: ribbonFall linear forwards;
+      }
+      @keyframes ribbonFall {
+        0% {
+          transform: translateY(-10vh) rotate(0deg) translateX(0);
+        }
+        100% {
+          transform: translateY(110vh) rotate(720deg) translateX(40vw);
+        }
+      }
+
+      /* Typewriter gradient */
+      #typewriter.gradient {
+        background: linear-gradient(90deg, #fff, #ffd166, #ff6b6b, #8bd3ff);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        background-size: 300% 100%;
+        animation: typeGradient 6s linear infinite;
+      }
+      @keyframes typeGradient {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+    </style>
+  </head>
+  <body class="text-white">
+    <div class="blobs" id="blobs" aria-hidden="true"></div>
+    <div class="stars" id="stars"></div>
+    <div class="spotlight" aria-hidden="true"></div>
+
+    <div
+      id="birthday-card"
+      class="content-card max-w-lg w-full p-8 md:p-12 rounded-3xl text-center"
+      onclick="openCard()"
+      role="button"
+      tabindex="0"
+      aria-pressed="false"
+      aria-label="Sürpriz Hediye Kartı - Açmak için tıklayın veya Enter'a basın"
+    >
+      <svg
+        class="ribbon"
+        width="160"
+        height="80"
+        viewBox="0 0 160 80"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        <defs>
+          <linearGradient id="g1" x1="0" x2="1">
+            <stop offset="0%" stop-color="#ff6b6b" />
+            <stop offset="100%" stop-color="#ffca3a" />
+          </linearGradient>
+        </defs>
+        <path
+          d="M10 30 C40 10, 120 10, 150 30 L140 45 C112 30, 48 30, 20 45 Z"
+          fill="url(#g1)"
+          opacity="0.95"
+        />
+      </svg>
+
+      <div class="initial-message">
+        <div class="mb-4 flex justify-center animate-pulse">
+          <svg
+            class="gift-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect x="3" y="10" width="18" height="11" rx="2" fill="#6B21A8" />
+            <rect x="2" y="7" width="20" height="3" fill="#8B5CF6" />
+            <path
+              d="M12 7H14C15.1046 7 16 6.10457 16 5V4L12 7Z"
+              fill="#FFC300"
+            />
+            <path d="M12 7H10C8.89543 7 8 6.10457 8 5V4L12 7Z" fill="#FFC300" />
+            <circle cx="12" cy="7" r="1.5" fill="#EC4899" />
+            <rect x="11" y="7" width="2" height="14" fill="#FFC300" />
+          </svg>
+        </div>
+        <h1
+          class="text-3xl md:text-4xl font-bold drop-shadow-lg text-shadow-lg tracking-wider text2"
+        >
+          Sana Özel Bir Hediye Var! 💖
+        </h1>
+        <br />
+        <p class="mt-2 text-lg opacity-80 animate-bounce text2">
+          Açmak için tıkla 👇
+        </p>
+        <br />
+        <h2 class="text1">( Seni mutlu edeceğim bir hediye var )</h2>
+      </div>
+
+      <div class="full-message">
+        <div class="text-6xl mb-6 animate-bounce">🎉🎂🎈🥳🎊</div>
+        <h1
+          class="text-4xl md:text-5xl font-black mb-6 drop-shadow-lg text-shadow-lg leading-tight"
+        >
+          İyi Ki Doğdun  <span class="text-yellow-300 animate-pulse">.....</span>
+        </h1>
+
+        <p
+          id="typewriter"
+          class="typewriter text-lg mb-8 opacity-95 font-medium leading-relaxed metin1"
+          aria-live="polite"
+        ></p>
+
+        <div class="flex items-center justify-center gap-4">
+          <button
+            id="likeBtn"
+            onclick="likeAction(event)"
+            class="bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 text-white font-bold py-4 px-8 rounded-full transition duration-300 transform hover:scale-125 shadow-2xl uppercase tracking-widest text-lg flex items-center justify-center mx-auto animate-pulse opacity-50 cursor-not-allowed"
+            disabled
+            aria-disabled="true"
+          >
+            BEĞENDİM! ❤️
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Yıldızları oluştur
+      function createStars() {
+        const starsContainer = document.getElementById("stars");
+        for (let i = 0; i < 30; i++) {
+          const star = document.createElement("div");
+          star.className = "star";
+          star.style.left = Math.random() * 100 + "%";
+          star.style.top = Math.random() * 100 + "%";
+          const size = Math.random() * 3 + 1;
+          star.style.width = size + "px";
+          star.style.height = size + "px";
+          star.style.animationDelay = Math.random() * 2 + "s";
+          star.style.opacity = 0.9 - Math.random() * 0.5;
+          starsContainer.appendChild(star);
+        }
+      }
+      createStars();
+
+      // Balloon pop configuration — buradan parçacık sayısı/mesafe kolayca değiştirilebilir
+      const BALLOON_POP = {
+        particles: 10, // patlama parçacığı sayısı
+        minDist: 40, // parçacıkların minimum atılma uzaklığı (px)
+        maxDist: 120, // parçacıkların maksimum atılma uzaklığı (px)
+        size: 5, // parçacık boyutu (px)
+      };
+
+      // Klavye ile açma desteği
+      (function attachKeyboard() {
+        const cardEl = document.getElementById("birthday-card");
+        cardEl.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            openCard();
+          }
+        });
+        // attach parallax + sparkles
+        attachCardInteractivity(cardEl);
+      })();
+
+      // Create decorative blobs
+      (function createBlobs() {
+        const container = document.getElementById("blobs");
+        const colors = ["#ff6b6b", "#ffd166", "#8bd3ff", "#7af27a", "#c998ff"];
+        for (let i = 0; i < 5; i++) {
+          const b = document.createElement("div");
+          b.className = "blob";
+          const w = 200 + Math.random() * 420;
+          b.style.width = w + "px";
+          b.style.height = Math.round(w * 0.6) + "px";
+          b.style.left = Math.random() * 100 + "%";
+          b.style.top = Math.random() * 40 + "%";
+          b.style.background = colors[i % colors.length];
+          b.style.transform = "translate(-50%,-50%)";
+          container.appendChild(b);
+        }
+      })();
+
+      // background audio removed
+
+      function openCard() {
+        const card = document.getElementById("birthday-card");
+        const initialMessage = card.querySelector(".initial-message");
+
+        if (card.classList.contains("opened")) return;
+
+        // 1. Kartı genişlet
+        card.classList.add("opened");
+
+        // 2. İlk mesajı yavaşça kaybet
+        initialMessage.style.opacity = "0";
+
+        // 3. Mesaj silindikten sonra display:none yap
+        setTimeout(() => {
+          initialMessage.style.display = "none";
+        }, 500);
+
+        // 4. Konfeti Patlat!
+        fireConfetti();
+        setTimeout(fireConfetti, 1000); // Ekstra konfeti
+
+        // 5. Typewriter efekti ile mesajı yaz (opacity transition'dan sonra)
+        setTimeout(() => {
+          typeWriter();
+          createBalloons();
+          card.setAttribute("aria-pressed", "true");
+        }, 500);
+      }
+
+      // Typewriter Fonksiyonu
+      function typeWriter() {
+        const text =
+          "Yeni yaşın sana sonsuz mutluluk, sağlık ve başarı getirsin. Seninle geçirdiğim her an için teşekkür ederim. İyi ki varsın .....! Sen dünyanın en güzel insanısın 🎉❤️";
+        const element = document.getElementById("typewriter");
+        let i = 0;
+        element.textContent = "";
+        function write() {
+          if (i < text.length) {
+            element.textContent += text[i];
+            i++;
+            setTimeout(write, 90); // Harf hızı (yavaşlatıldı — daha akıcı okunur)
+          } else {
+            // Yazı tamamlandığında butonu aktif yap
+            const btn = document.getElementById("likeBtn");
+            if (btn) {
+              btn.disabled = false;
+              btn.setAttribute("aria-disabled", "false");
+              btn.classList.remove("opacity-50", "cursor-not-allowed");
+              // küçük görsel vurgu ve odak
+              btn.classList.add("ring", "ring-yellow-300", "ring-offset-2");
+              setTimeout(
+                () =>
+                  btn.classList.remove(
+                    "ring",
+                    "ring-yellow-300",
+                    "ring-offset-2"
+                  ),
+                900
+              );
+              try {
+                btn.focus();
+              } catch (e) {}
+            }
+          }
+        }
+        write();
+      }
+
+      // Basit balon animasyonu
+      function createBalloons() {
+        const container = document.getElementById("stars");
+        const colors = ["#FF6B6B", "#FFD166", "#4ecdc4", "#8bd3ff", "#c998ff"];
+        for (let i = 0; i < 6; i++) {
+          const b = document.createElement("div");
+          b.className = "balloon";
+          const size = 28 + Math.random() * 56;
+          b.style.width = size + "px";
+          b.style.height = Math.round(size * 1.2) + "px";
+          // compute pixel left based on container width so physics controls it
+          const crect = container.getBoundingClientRect();
+          const leftPx = Math.round(
+            crect.width * ((6 + Math.random() * 88) / 100)
+          );
+          b.style.left = leftPx + "px";
+          const bg = colors[Math.floor(Math.random() * colors.length)];
+          // gradient + subtle rim
+          b.style.background = bg;
+          b.style.background = `radial-gradient(circle at 30% 25%, rgba(255,255,255,0.9), rgba(255,255,255,0.08) 18%), ${bg}`;
+          // We'll control vertical/horizontal motion via JS physics
+          b.style.bottom = -Math.round(size * 1.4) + "px";
+          // add string inside balloon so it moves with it
+          const s = document.createElement("div");
+          s.className = "balloon-string";
+          s.style.background =
+            "linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.05))";
+          s.style.height = Math.round(size * 0.9) + "px";
+          b.appendChild(s);
+          // Tıklanınca patlat
+          b.addEventListener("pointerdown", (ev) => {
+            ev.stopPropagation();
+            popBalloon(b);
+          });
+          // register physics
+          registerBalloonPhysics(b, leftPx, Math.round(size * 1.2));
+          container.appendChild(b);
+          // Temizlik
+          setTimeout(() => {
+            if (b.parentNode) b.parentNode.removeChild(b);
+          }, 14000);
+        }
+      }
+
+      // Physics registry for balloons
+      const _balloonPhysics = [];
+      let _balloonPhysicsRunning = false;
+
+      function registerBalloonPhysics(el, leftPx, heightPx) {
+        const container = document.getElementById("stars");
+        const crect = container.getBoundingClientRect();
+        const x = leftPx; // px from left of container
+        const y = -heightPx; // bottom in px (start below view)
+        const obj = {
+          el,
+          x,
+          y,
+          vx: (Math.random() - 0.5) * 12, // horizontal velocity px/s
+          vy: 20 + Math.random() * 40, // upward speed px/s
+          ax: 0,
+          ay: -6 - Math.random() * 6, // slight upward acceleration (negative since bottom increases)
+          swayAmp: 6 + Math.random() * 18,
+          swayFreq: 0.6 + Math.random() * 1.2,
+          phase: Math.random() * Math.PI * 2,
+          created: performance.now(),
+        };
+        el.style.left = obj.x + "px";
+        el.style.bottom = obj.y + "px";
+        _balloonPhysics.push(obj);
+        if (!_balloonPhysicsRunning) startBalloonPhysics();
+      }
+
+      function startBalloonPhysics() {
+        _balloonPhysicsRunning = true;
+        let last = performance.now();
+        function loop(now) {
+          const dt = Math.min(0.05, (now - last) / 1000);
+          last = now;
+          const container = document.getElementById("stars");
+          const crect = container.getBoundingClientRect();
+          for (let i = _balloonPhysics.length - 1; i >= 0; i--) {
+            const o = _balloonPhysics[i];
+            // apply sway as lateral acceleration
+            const t = (now - o.created) / 1000;
+            const sway =
+              Math.sin(t * o.swayFreq * 2 * Math.PI + o.phase) * o.swayAmp;
+            // gentle wind noise
+            const wind = Math.sin(t * 0.7 + o.phase) * 6;
+            o.vx += (sway * 0.02 + wind * 0.004) * dt * 60;
+            // upward buoyancy
+            o.vy += o.ay * dt;
+            // damping
+            o.vx *= 0.995;
+            o.vy *= 0.999;
+            // update position
+            o.x += o.vx * dt;
+            o.y += o.vy * dt;
+            // bounds: keep within horizontal container plus small margin
+            if (o.x < -80) (o.x = -80), (o.vx *= -0.3);
+            if (o.x > crect.width + 80)
+              (o.x = crect.width + 80), (o.vx *= -0.3);
+            // apply to DOM
+            if (o.el.parentNode) {
+              o.el.style.left = Math.round(o.x) + "px";
+              o.el.style.bottom = Math.round(o.y) + "px";
+              const rot = Math.max(-18, Math.min(18, o.vx * 0.8));
+              o.el.style.transform = `rotate(${rot}deg)`;
+            } else {
+              // element removed — cleanup
+              _balloonPhysics.splice(i, 1);
+              continue;
+            }
+            // if moved far above, remove from list
+            if (o.y > crect.height + 200) {
+              if (o.el.parentNode) o.el.parentNode.removeChild(o.el);
+              _balloonPhysics.splice(i, 1);
+            }
+          }
+          if (_balloonPhysics.length > 0) requestAnimationFrame(loop);
+          else _balloonPhysicsRunning = false;
+        }
+        requestAnimationFrame(loop);
+      }
+
+      // Small utility: play a short pop sound using WebAudio (no external file)
+      let __popAudioCtx = null;
+      function playPopSound() {
+        try {
+          if (!__popAudioCtx)
+            __popAudioCtx = new (window.AudioContext ||
+              window.webkitAudioContext)();
+          const ctx = __popAudioCtx;
+          const duration = 0.12;
+          const now = ctx.currentTime;
+          // create noise buffer
+          const bufferSize = ctx.sampleRate * duration;
+          const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+          const data = buffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++)
+            data[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize);
+          const noise = ctx.createBufferSource();
+          noise.buffer = buffer;
+          const gain = ctx.createGain();
+          gain.gain.setValueAtTime(0.0001, now);
+          gain.gain.exponentialRampToValueAtTime(0.25, now + 0.001);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+          noise.connect(gain).connect(ctx.destination);
+          noise.start(now);
+          noise.stop(now + duration + 0.02);
+        } catch (e) {
+          // ignore audio errors (autoplay policy, etc.)
+        }
+      }
+
+      // Pop a balloon with small burst particles + confetti + sound + vibration
+      function popBalloon(balloon) {
+        if (!balloon || balloon.classList.contains("popped")) return;
+        balloon.classList.add("popped");
+        const container = document.getElementById("stars");
+        const rect = balloon.getBoundingClientRect();
+        const parentRect = container.getBoundingClientRect();
+        const cx = rect.left - parentRect.left + rect.width / 2;
+        const cy = rect.top - parentRect.top + rect.height / 2;
+        const color = balloon.style.background || "#fff";
+
+        // visual shards / particles
+        for (let i = 0; i < (BALLOON_POP.particles || 10); i++) {
+          const p = document.createElement("div");
+          p.className = "burst";
+          const half = (BALLOON_POP.size || 8) / 2;
+          p.style.width = (BALLOON_POP.size || 8) + "px";
+          p.style.height = (BALLOON_POP.size || 8) + "px";
+          p.style.left = cx - half + "px";
+          p.style.top = cy - half + "px";
+          p.style.background = color;
+          const angle = Math.random() * Math.PI * 2;
+          const dist =
+            (BALLOON_POP.minDist || 30) +
+            Math.random() *
+              ((BALLOON_POP.maxDist || 120) - (BALLOON_POP.minDist || 30));
+          const tx = Math.round(Math.cos(angle) * dist) + "px";
+          const ty = Math.round(Math.sin(angle) * dist) + "px";
+          const rot = Math.round(Math.random() * 360) + "deg";
+          p.style.setProperty("--tx", tx);
+          p.style.setProperty("--ty", ty);
+          p.style.setProperty("--rot", rot);
+          if (Math.random() > 0.6) {
+            p.classList.add("tri");
+            p.style.borderBottomColor = color;
+            p.style.background = "transparent";
+          } else {
+            p.style.borderRadius = "50%";
+          }
+          container.appendChild(p);
+          setTimeout(() => {
+            if (p.parentNode) p.parentNode.removeChild(p);
+          }, 900);
+        }
+
+        // pop ring
+        const ring = document.createElement("div");
+        ring.className = "pop-ring";
+        ring.style.left = cx - 24 + "px";
+        ring.style.top = cy - 24 + "px";
+        ring.style.borderColor = color;
+        container.appendChild(ring);
+        setTimeout(() => {
+          if (ring.parentNode) ring.parentNode.removeChild(ring);
+        }, 520);
+
+        // small localized confetti using global confetti lib (origin normalized to viewport)
+        try {
+          const originX = (rect.left + rect.width / 2) / window.innerWidth;
+          const originY = (rect.top + rect.height / 2) / window.innerHeight;
+          confetti({
+            particleCount: 28,
+            spread: 70,
+            startVelocity: 48,
+            origin: { x: originX, y: originY },
+            colors: ["#ff6b6b", "#ffd166", "#8bd3ff"],
+          });
+        } catch (e) {
+          /* ignore if confetti lib unavailable */
+        }
+
+        // short sound and vibration for tactile feedback
+        playPopSound();
+        if (navigator.vibrate)
+          try {
+            navigator.vibrate(18);
+          } catch (e) {}
+
+        // remove balloon shortly after pop animation
+        setTimeout(() => {
+          if (balloon.parentNode) balloon.parentNode.removeChild(balloon);
+        }, 260);
+        // remove from physics registry if present
+        for (let i = _balloonPhysics.length - 1; i >= 0; i--) {
+          if (_balloonPhysics[i].el === balloon) {
+            _balloonPhysics.splice(i, 1);
+          }
+        }
+      }
+
+      // Parallax and sparkle interactivity
+      function attachCardInteractivity(cardEl) {
+        if (!cardEl) return;
+        let lastSpawn = 0;
+        cardEl.addEventListener("pointermove", (e) => {
+          const r = cardEl.getBoundingClientRect();
+          const cx = r.left + r.width / 2;
+          const cy = r.top + r.height / 2;
+          const dx = (e.clientX - cx) / r.width;
+          const dy = (e.clientY - cy) / r.height;
+          const rotateX = (-dy * 6).toFixed(2);
+          const rotateY = (dx * 10).toFixed(2);
+          cardEl.style.transform = `translateZ(0) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+          cardEl.style.boxShadow = `0 18px 60px rgba(0,0,0,0.45)`;
+
+          // spawn small sparkles occasionally
+          const now = Date.now();
+          if (now - lastSpawn > 60) {
+            lastSpawn = now;
+            spawnSpark(e.clientX, e.clientY);
+          }
+        });
+        cardEl.addEventListener("pointerleave", () => {
+          cardEl.style.transform = "";
+          cardEl.style.boxShadow = "var(--glass-shadow)";
+        });
+      }
+
+      function spawnSpark(clientX, clientY) {
+        const container = document.getElementById("stars");
+        const cRect = container.getBoundingClientRect();
+        const s = document.createElement("div");
+        s.className = "spark";
+        const size = 6 + Math.random() * 10;
+        s.style.width = size + "px";
+        s.style.height = size + "px";
+        s.style.left = clientX - cRect.left - size / 2 + "px";
+        s.style.top = clientY - cRect.top - size / 2 + "px";
+        s.style.background =
+          Math.random() > 0.5
+            ? "linear-gradient(180deg,#fff,#ffd166)"
+            : "linear-gradient(180deg,#fff,#ff6b6b)";
+        container.appendChild(s);
+        setTimeout(() => {
+          if (s.parentNode) s.parentNode.removeChild(s);
+        }, 820);
+      }
+
+      // Konfeti Fonksiyonu
+      function fireConfetti(event) {
+        // Eğer butona tıklandıysa event bubble yapmasın (tekrar openCard çalışmasın diye)
+        if (event) event.stopPropagation();
+
+        let count = 350;
+        let defaults = {
+          origin: { y: 0.68 },
+          zIndex: 9999,
+          colors: ["#ff6b6b", "#ffca3a", "#ffd166", "#8bd3ff", "#7af27a"],
+        };
+
+        function fire(particleRatio, opts) {
+          confetti(
+            Object.assign({}, defaults, opts, {
+              particleCount: Math.floor(count * particleRatio),
+            })
+          );
+        }
+
+        fire(0.25, { spread: 26, startVelocity: 55 });
+        fire(0.2, { spread: 60 });
+        fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+        fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+        fire(0.1, { spread: 120, startVelocity: 45 });
+        // Ekstra konfeti
+        setTimeout(
+          () =>
+            fire(0.3, {
+              spread: 80,
+              startVelocity: 65,
+              colors: ["#ff0000", "#00ff00", "#0000ff"],
+            }),
+          500
+        );
+        setTimeout(
+          () =>
+            fire(0.2, {
+              spread: 90,
+              startVelocity: 75,
+              colors: ["#ffff00", "#ff00ff", "#00ffff"],
+            }),
+          1000
+        );
+      }
+
+      // Like butonuna basıldığında kalp + konfeti
+      function likeAction(event) {
+        if (event) event.stopPropagation();
+        const btn = document.getElementById("likeBtn");
+        if (!btn || btn.disabled) return;
+        // küçük konfeti vuruşu
+        fireConfetti();
+        // kalpler oluştur
+        const rect = btn.getBoundingClientRect();
+        const container = document.getElementById("stars");
+        spawnHearts(
+          rect.left + rect.width / 2 - container.getBoundingClientRect().left,
+          rect.top - container.getBoundingClientRect().top
+        );
+        // görsel reaksiyon
+        btn.classList.add("scale-105");
+        setTimeout(() => btn.classList.remove("scale-105"), 250);
+      }
+
+      // Spawn floating hearts at x,y (relative to stars container)
+      function spawnHearts(x, y) {
+        const container = document.getElementById("stars");
+        const count = 6;
+        for (let i = 0; i < count; i++) {
+          const h = document.createElement("div");
+          h.className = "heart";
+          const left = x + (Math.random() - 0.5) * 80;
+          const top = y + (Math.random() - 0.5) * 40;
+          h.style.left = left + "px";
+          h.style.top = top + "px";
+          // small rotation variety
+          const rot = Math.random() * 40 - 20;
+          h.style.transform = `translate(-50%,-50%) rotate(${rot}deg)`;
+          h.innerHTML = `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 21s-7-4.35-9-7.5C-1 8.5 4 3 7.5 5.5 9 6.7 12 9 12 9s3-2.3 4.5-3.5C20 3 25 8.5 21 13.5 19 16.65 12 21 12 21z" fill="#ff6b6b"/></svg>`;
+          container.appendChild(h);
+          setTimeout(() => {
+            if (h.parentNode) h.parentNode.removeChild(h);
+          }, 1500 + Math.random() * 600);
+        }
+      }
+
+      // resetCard removed — replay button disabled in this build
+    </script>
+  </body>
+</html>
